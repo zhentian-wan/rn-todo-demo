@@ -16,15 +16,27 @@ import {Header} from './header';
 import {Footer} from './footer';
 
 class App extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            value: "",
-            items: []
-        }
-        this.handleAddItem = this.handleAddItem.bind(this);
-    }
-    handleAddItem() {
+
+    state = {
+        allCompleted: false,
+        value: "",
+        items: []
+    };
+
+    handleAllCompleted = () => {
+        const complete = !this.state.allCompleted;
+        const newItems = this.state.items.map((item) => ({
+            ...item,
+            complete
+        }));
+        this.setState({
+            items: newItems,
+            allCompleted: complete
+        });
+        console.table(this.state.items);
+    };
+
+    handleAddItem = () => {
         if (!this.state.value) return;
         const newItems = [
             ...this.state.items,
@@ -41,13 +53,15 @@ class App extends Component {
         });
 
         setTimeout(() => console.log(this.state), 0);
-    }
+    };
+
     render() {
         return (
             <View style={styles.container}>
                 <Header
                     value={this.state.value}
                     onAddItem={this.handleAddItem}
+                    toggleAllComplete={this.handleAllCompleted}
                     onChange={(value) => this.setState({ value })}
                 />
                 <View style={styles.content}>
