@@ -8,12 +8,15 @@ import React, {Component} from 'react';
 import {
     Platform,
     StyleSheet,
+    FlatList,
+    ScrollView,
     Text,
     View
 } from 'react-native';
 
 import {Header} from './header';
 import {Footer} from './footer';
+import {Row} from './row';
 
 class App extends Component {
 
@@ -55,6 +58,34 @@ class App extends Component {
         setTimeout(() => console.log(this.state), 0);
     };
 
+
+    handleToggle = (item) => {
+        const complete = !item.complete;
+        const newItem = {
+            ...item,
+            complete
+        };
+        const newItems = this.state.items.map((obj) => {
+            if(obj.key !== item.key) {
+                return obj;
+            }
+            return newItem;
+        });
+        this.setState({
+            items: newItems,
+        });
+
+        setTimeout(() => console.table(this.state.items), 0);
+    }
+
+    _renderRow = ({item}) => {
+        return (
+            <Row item={item} key={item.key} onToggle={() => this.handleToggle(item)}/>
+        );
+    };
+
+    _keyExtractor = (item, index) => item.key;
+
     render() {
         return (
             <View style={styles.container}>
@@ -65,7 +96,12 @@ class App extends Component {
                     onChange={(value) => this.setState({ value })}
                 />
                 <View style={styles.content}>
-
+                    <FlatList
+                        data={this.state.items}
+                        renderItem={this._renderRow}
+                        extraData={this.state.items}
+                        keyExtractor={this._keyExtractor}
+                    />
                 </View>
                 <Footer />
             </View>
