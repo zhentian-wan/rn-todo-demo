@@ -21,17 +21,19 @@ import {Row} from './row';
 class App extends Component {
 
     state = {
+        selectedFilter: 'ALL',
         allCompleted: false,
-        value: "",
+        value: '',
         items: []
     };
 
     handleAllCompleted = () => {
         const complete = !this.state.allCompleted;
-        const newItems = this.state.items.map((item) => ({
-            ...item,
-            complete
-        }));
+        const newItems = this.state.items
+            .map((item) => ({
+                ...item,
+                complete
+            }));
         this.setState({
             items: newItems,
             allCompleted: complete
@@ -59,9 +61,10 @@ class App extends Component {
     };
 
     handleRemove = (item) => {
-        const newItems = this.state.items.filter((obj) => {
-            return item.key !== obj.key;
-        });
+        const newItems = this.state.items
+            .filter((obj) => {
+                return item.key !== obj.key;
+            });
         this.setState({
             items: newItems
         });
@@ -73,18 +76,43 @@ class App extends Component {
             ...item,
             complete
         };
-        const newItems = this.state.items.map((obj) => {
-            if(obj.key !== item.key) {
-                return obj;
-            }
-            return newItem;
-        });
+        const newItems = this.state.items
+            .map((obj) => {
+                if (obj.key !== item.key) {
+                    return obj;
+                }
+                return newItem;
+            });
         this.setState({
             items: newItems,
         });
 
         setTimeout(() => console.table(this.state.items), 0);
-    }
+    };
+
+    filteredItems = (filter) => {
+
+        switch (filter) {
+            case 'ALL':
+                return this.state.items;
+            case 'ACTIVATE':
+                return this.state.items.filter((item) => {
+                    return !item.complete
+                });
+            case 'COMPLETED':
+                return this.state.items.filter((item) => {
+                    return item.complete
+                });
+            default:
+                return this.state.item;
+        }
+    };
+
+    handlerFilter = (filter) => {
+        this.setState({
+            selectedFilter: filter,
+        });
+    };
 
     _renderRow = ({item}) => {
         return (
@@ -103,17 +131,19 @@ class App extends Component {
                     value={this.state.value}
                     onAddItem={this.handleAddItem}
                     toggleAllComplete={this.handleAllCompleted}
-                    onChange={(value) => this.setState({ value })}
+                    onChange={(value) => this.setState({value})}
                 />
                 <View style={styles.content}>
                     <FlatList
-                        data={this.state.items}
+                        data={this.filteredItems(this.state.selectedFilter)}
                         renderItem={this._renderRow}
-                        extraData={this.state.items}
                         keyExtractor={this._keyExtractor}
                     />
                 </View>
-                <Footer />
+                <Footer
+                    filter={this.state.selectedFilter}
+                    onFilter={this.handlerFilter}
+                />
             </View>
         );
     }
@@ -122,9 +152,9 @@ class App extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#F5F5F5",
+        backgroundColor: '#F5F5F5',
         ...Platform.select({
-            ios: { paddingTop: 30 }
+            ios: {paddingTop: 30}
         })
     },
     content: {

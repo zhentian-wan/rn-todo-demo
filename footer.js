@@ -3,10 +3,49 @@ import {
     Platform,
     StyleSheet,
     Text,
+    TouchableOpacity,
     View
 } from 'react-native';
-export const Footer = () => (
-    <View>
-        <Text>This is the footer</Text>
+export const Footer = ({filter = 'ALL', onFilter}) => (
+    <View style={styles.container}>
+        <TouchableOpacity
+            onPress={() => onFilter('ALL')}
+            style={[styles.button, filter === 'ALL' && styles.selected]}>
+            <Text >
+                All
+            </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+            onPress={() => onFilter('ACTIVATE')}
+            style={[styles.button, filter === 'ACTIVATE' && styles.selected]}>
+            <Text >
+                Active
+            </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+            onPress={() => onFilter('COMPLETED')}
+            style={[styles.button, filter === 'COMPLETED' && styles.selected]}>
+            <Text >
+                Completed
+            </Text>
+        </TouchableOpacity>
     </View>
-)
+);
+
+const styles = StyleSheet.create({
+    container: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        alignItems: 'center'
+    },
+    button: {
+        paddingVertical: 5,
+        borderRadius: 5,
+        borderWidth: 1,
+        borderColor: 'transparent'
+    },
+    selected: {
+        borderColor: 'rgba(175, 47,47,.2)'
+    }
+})
