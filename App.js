@@ -58,6 +58,14 @@ class App extends Component {
         setTimeout(() => console.log(this.state), 0);
     };
 
+    handleRemove = (item) => {
+        const newItems = this.state.items.filter((obj) => {
+            return item.key !== obj.key;
+        });
+        this.setState({
+            items: newItems
+        });
+    };
 
     handleToggle = (item) => {
         const complete = !item.complete;
@@ -80,7 +88,9 @@ class App extends Component {
 
     _renderRow = ({item}) => {
         return (
-            <Row item={item} key={item.key} onToggle={() => this.handleToggle(item)}/>
+            <Row item={item} key={item.key}
+                 onRemove={() => this.handleRemove(item)}
+                 onToggle={() => this.handleToggle(item)}/>
         );
     };
 
