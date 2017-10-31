@@ -6,8 +6,9 @@ import {
     TouchableOpacity,
     View
 } from 'react-native';
-export const Footer = ({filter = 'ALL', onFilter}) => (
+export const Footer = ({filter = 'ALL', count, onFilter}) => (
     <View style={styles.container}>
+        <Text>Count: {count}</Text>
         <TouchableOpacity
             onPress={() => onFilter('ALL')}
             style={[styles.button, filter === 'ALL' && styles.selected]}>
