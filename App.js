@@ -10,7 +10,7 @@ import {
     StyleSheet,
     FlatList,
     AsyncStorage,
-    Text,
+    ActivityIndicator,
     View
 } from 'react-native';
 
@@ -21,6 +21,7 @@ import {Row} from './row';
 class App extends Component {
 
     state = {
+        loading: true,
         selectedFilter: 'ALL',
         allCompleted: false,
         value: '',
@@ -32,9 +33,9 @@ class App extends Component {
             .then(json => {
                 try {
                     const items = JSON.parse(json);
-                    items && this.setState({items})
+                    items && this.setState({items, loading: false})
                 } catch(err) {
-
+                    this.setState({loading: false})
                 }
             })
     }
@@ -167,6 +168,12 @@ class App extends Component {
                     filter={this.state.selectedFilter}
                     onFilter={this.handlerFilter}
                 />
+                {this.state.loading && <View style={styles.loading}>
+                    <ActivityIndicator
+                        animating
+                        size="large"
+                    />
+                </View>}
             </View>
         );
     }
@@ -182,7 +189,17 @@ const styles = StyleSheet.create({
     },
     content: {
         flex: 1
+    },
+    loading: {
+        position: "absolute",
+        left: 0,
+        top: 0,
+        right: 0,
+        bottom: 0,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "rgba(0,0,0,.2)"
     }
-})
+});
 
 export default App;
