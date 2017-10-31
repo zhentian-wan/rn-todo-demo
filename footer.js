@@ -6,7 +6,7 @@ import {
     TouchableOpacity,
     View
 } from 'react-native';
-export const Footer = ({filter = 'ALL', count, onFilter}) => (
+export const Footer = ({filter = 'ALL', count, onClearComplete, onFilter}) => (
     <View style={styles.container}>
         <Text>Count: {count}</Text>
         <TouchableOpacity
@@ -28,6 +28,11 @@ export const Footer = ({filter = 'ALL', count, onFilter}) => (
             style={[styles.button, filter === 'COMPLETED' && styles.selected]}>
             <Text >
                 Completed
+            </Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={onClearComplete}>
+            <Text>
+                Clear Completed
             </Text>
         </TouchableOpacity>
     </View>

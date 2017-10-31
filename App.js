@@ -114,6 +114,13 @@ class App extends Component {
         });
     };
 
+    handleClearComplete = () => {
+        const newItems = this.filteredItems('ACTIVATE');
+        this.setState({
+            items: newItems
+        });
+    };
+
     _renderRow = ({item}) => {
         return (
             <Row item={item} key={item.key}
@@ -141,6 +148,7 @@ class App extends Component {
                     />
                 </View>
                 <Footer
+                    onClearComplete={this.handleClearComplete}
                     count={this.filteredItems('ACTIVATE').length}
                     filter={this.state.selectedFilter}
                     onFilter={this.handlerFilter}
