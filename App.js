@@ -9,7 +9,7 @@ import {
     Platform,
     StyleSheet,
     FlatList,
-    ScrollView,
+    AsyncStorage,
     Text,
     View
 } from 'react-native';
@@ -26,6 +26,18 @@ class App extends Component {
         value: '',
         items: []
     };
+
+    componentWillMount() {
+        AsyncStorage.getItem('items')
+            .then(json => {
+                try {
+                    const items = JSON.parse(json);
+                    items && this.setState({items})
+                } catch(err) {
+
+                }
+            })
+    }
 
     handleAllCompleted = () => {
         const complete = !this.state.allCompleted;
@@ -91,6 +103,8 @@ class App extends Component {
     };
 
     filteredItems = (filter) => {
+
+        AsyncStorage.setItem('items', JSON.stringify(this.state.items));
 
         switch (filter) {
             case 'ALL':
