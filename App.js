@@ -39,7 +39,36 @@ class App extends Component {
                 }
             })
     }
-
+    handleUpdateText = (key, text) => {
+        const filteredItems = this.filteredItems(
+            this.state.selectedFilter
+        );
+        const newItems = filteredItems.map((item) => {
+            if (item.key !== key) {return item;}
+            return {
+                ...item,
+                text
+            }
+        });
+        this.setState({
+            items: newItems
+        })
+    };
+    handleToggleEditing = (key, editing) => {
+        const filteredItems = this.filteredItems(
+            this.state.selectedFilter
+        );
+        const newItems = filteredItems.map((item) => {
+            if (item.key !== key) {return item;}
+            return {
+                ...item,
+                editing
+            }
+        });
+        this.setState({
+            items: newItems
+        })
+    };
     handleAllCompleted = () => {
         const complete = !this.state.allCompleted;
         const newItems = this.state.items
@@ -139,6 +168,8 @@ class App extends Component {
     _renderRow = ({item}) => {
         return (
             <Row item={item} key={item.key}
+                 onUpdate={(text) => this.handleUpdateText(item.key, text)}
+                 onToggleEdit={(editing) => this.handleToggleEditing(item.key, editing)}
                  onRemove={() => this.handleRemove(item)}
                  onToggle={() => this.handleToggle(item)}/>
         );
