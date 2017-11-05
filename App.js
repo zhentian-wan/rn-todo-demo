@@ -10,6 +10,8 @@ import {
     StyleSheet,
     FlatList,
     AsyncStorage,
+    Animated,
+    Easing,
     ActivityIndicator,
     View
 } from 'react-native';
@@ -18,8 +20,8 @@ import {Header} from './header';
 import {Footer} from './footer';
 import {Row} from './row';
 
-class App extends Component {
 
+class App extends Component {
     state = {
         loading: true,
         selectedFilter: 'ALL',
@@ -29,6 +31,7 @@ class App extends Component {
     };
 
     componentWillMount() {
+        this.animatedValue = new Animated.Value(0);
         AsyncStorage.getItem('items')
             .then(json => {
                 try {
@@ -38,6 +41,13 @@ class App extends Component {
                     this.setState({loading: false})
                 }
             })
+    }
+    componentDidMount() {
+        Animated.timing(this.animatedValue, {
+            toValue: 1,
+            duration: 2000,
+            easing: Easing.easeIn
+        }).start();
     }
     handleUpdateText = (key, text) => {
         const filteredItems = this.filteredItems(
@@ -178,8 +188,13 @@ class App extends Component {
     _keyExtractor = (item, index) => item.key;
 
     render() {
+
+        const animatedStyle = {
+            opacity: this.animatedValue
+        };
+
         return (
-            <View style={styles.container}>
+            <Animated.View style={[styles.container, animatedStyle]}>
                 <Header
                     value={this.state.value}
                     onAddItem={this.handleAddItem}
@@ -205,7 +220,7 @@ class App extends Component {
                         size="large"
                     />
                 </View>}
-            </View>
+            </Animated.View>
         );
     }
 }
